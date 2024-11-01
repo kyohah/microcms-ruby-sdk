@@ -1,10 +1,32 @@
 # frozen_string_literal: true
 
-require 'microcms/version'
 require 'net/http'
 require 'uri'
 require 'json'
 require 'forwardable'
+
+# Common files
+require 'microcms/api_client'
+require 'microcms/api_error'
+require 'microcms/version'
+require 'microcms/configuration'
+
+# Models
+require 'microcms/models/api_v1_contents_endpoint_content_id_created_by_patch200_response'
+require 'microcms/models/api_v1_contents_endpoint_content_id_created_by_patch_request'
+require 'microcms/models/api_v1_contents_endpoint_content_id_patch200_response'
+require 'microcms/models/api_v1_contents_endpoint_content_id_patch_request'
+require 'microcms/models/api_v1_contents_endpoint_get200_response'
+require 'microcms/models/api_v2_media_delete200_response'
+require 'microcms/models/api_v2_media_get200_response'
+require 'microcms/models/api_v2_media_get200_response_media_inner'
+require 'microcms/models/content_metadata'
+require 'microcms/models/content_metadata_custom_status_inner'
+require 'microcms/models/content_metadata_reservation_time'
+
+# APIs
+require 'microcms/api/default_api'
+require 'microcms/api/management_api'
 
 # MicroCMS
 module MicroCMS
@@ -17,6 +39,20 @@ module MicroCMS
 
     def client
       Client.new(@service_domain, @api_key)
+    end
+
+    # Customize default settings for the SDK using block.
+    #   MicroCMS.configure do |config|
+    #     config.username = "xxx"
+    #     config.password = "xxx"
+    #   end
+    # If no block given, return the default Configuration object.
+    def configure
+      if block_given?
+        yield(Configuration.default)
+      else
+        Configuration.default
+      end
     end
   end
 
